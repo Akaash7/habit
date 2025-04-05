@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val HabitPurple = Color(0xFF783C9C)
 val HabitPurpleLight = Color(0xFFF8EEFF)
+
+val HabitLightGreen = Color(0xFFF2FFFA)
+val HabitDarkGreen = Color(0xFF6AA57D)

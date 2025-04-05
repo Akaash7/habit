@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.data.local.model.lookingForMore
 import com.data.local.model.triedTastedLoved
 import com.habit.MainScreen.components.DishCardLarge
@@ -27,12 +28,12 @@ import com.habit.ui.theme.HabitPurple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(title = { HabitTitle() }, actions = {
-                IconButton(onClick = {}) {
+                IconButton(onClick = { navController.navigate("cart") }) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "")
                 }
             })
