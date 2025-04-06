@@ -24,21 +24,33 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.data.local.model.lookingForMore
 import com.habit.CartScreen.components.CartItem
 import com.habit.ui.theme.HabitDarkGreen
 import com.habit.ui.theme.HabitPurple
+import com.habit.viewmodel.MainViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(navController: NavHostController) {
+fun CartScreen(
+    navController: NavHostController,
+    viewmodel: MainViewmodel = hiltViewModel(),
+) {
+    val cartItems by viewmodel.cartItems.collectAsStateWithLifecycle()
+    val totalPrice =
+        remember(cartItems) {
+            cartItems.sumOf { it.quantity * it.dish.price }
+        }
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             title = { Text("Your Cart", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)) },
@@ -61,15 +73,19 @@ fun CartScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(12.dp),
             ) {
                 LazyColumn(modifier = Modifier.padding(8.dp).fillMaxWidth()) {
-                    items(lookingForMore.take(3)) {
-                        CartItem(it)
+                    items(cartItems) { cartItem ->
+                        CartItem(
+                            cartItem,
+                            onIncrease = { viewmodel.addToCart(cartItem.dish) },
+                            onDecrease = { viewmodel.removeFromCart(cartItem.dish) },
+                        )
                     }
                     item {
                         Text(
                             modifier =
                                 Modifier
                                     .clickable {
-                                        navController.navigate("home")
+                                        navController.popBackStack()
                                     }.padding(8.dp),
                             text = "+ Add Items",
                             style = TextStyle.Default.copy(color = HabitDarkGreen, fontWeight = FontWeight.Medium),
@@ -87,7 +103,11 @@ fun CartScreen(navController: NavHostController) {
                     onClick = {},
                     colors = ButtonDefaults.buttonColors().copy(containerColor = HabitPurple),
                 ) {
-                    Text("PAY")
+                    Text(
+                        text = "Pay:\u20B9$totalPrice",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    )
                 }
             }
         }

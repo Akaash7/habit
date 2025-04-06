@@ -1,4 +1,4 @@
-package com.data.local.model
+package com.domain.models
 
 data class Dish(
     val dishId: Int,
@@ -9,6 +9,7 @@ data class Dish(
     val isVeg: Boolean,
     val spicyLevel: Int,
     val discount: Int,
+    val quantity: Int = 0,
 )
 
 val triedTastedLoved =

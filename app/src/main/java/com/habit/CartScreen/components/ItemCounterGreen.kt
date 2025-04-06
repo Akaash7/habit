@@ -43,7 +43,7 @@ fun ItemCounterGreen(
                 fontWeight = FontWeight.Medium,
             )
             Text(
-                modifier = Modifier.clickable { onDecrease() }.padding(horizontal = 6.dp),
+                modifier = Modifier.clickable { onIncrease() }.padding(horizontal = 6.dp),
                 text = "+",
                 fontSize = 14.sp,
             )

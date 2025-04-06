@@ -26,13 +26,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.data.local.model.Dish
+import com.domain.models.Dish
 import com.habit.R
 import com.habit.ui.theme.HabitPurple
 import com.habit.ui.theme.HabitPurpleLight
 
 @Composable
-fun DishCardSmall(dish: Dish) {
+fun DishCardSmall(
+    dish: Dish,
+    quantity: Int,
+    addToCart: () -> Unit,
+    onCountIncrease: () -> Unit,
+    onCountDecrease: () -> Unit,
+) {
     Card(
         modifier =
             Modifier
@@ -41,7 +47,12 @@ fun DishCardSmall(dish: Dish) {
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors().copy(containerColor = HabitPurpleLight),
     ) {
-        Box(modifier = Modifier.fillMaxSize().weight(6f)) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .weight(6f),
+        ) {
             Image(
                 modifier =
                     Modifier
@@ -61,22 +72,20 @@ fun DishCardSmall(dish: Dish) {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Bottom,
             ) {
-                if (dish.isVeg) {
-                    Image(
-                        modifier = Modifier.size(12.dp),
-                        imageVector = ImageVector.vectorResource(R.drawable.vegicon),
-                        contentDescription = "Veg",
-                    )
-                } else {
-                    Image(
-                        modifier = Modifier.size(12.dp),
-                        imageVector = ImageVector.vectorResource(R.drawable.nonvegicon),
-                        contentDescription = "Non Veg",
-                    )
-                }
+                Image(
+                    modifier = Modifier.size(12.dp),
+                    imageVector = ImageVector.vectorResource(if (dish.isVeg) R.drawable.vegicon else R.drawable.nonvegicon),
+                    contentDescription = if (dish.isVeg) "Veg" else "Non Veg",
+                )
             }
         }
-        Column(modifier = Modifier.weight(4f).padding(8.dp), verticalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            modifier =
+                Modifier
+                    .weight(4f)
+                    .padding(8.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
             Text(
                 text = dish.name,
                 style =
@@ -101,15 +110,19 @@ fun DishCardSmall(dish: Dish) {
                     modifier = Modifier.weight(6f),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = HabitPurple),
-                    onClick = { },
+                    onClick = { addToCart() },
                 ) {
-                    Text(
-                        text = "ADD",
-                        style =
-                            MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                            ),
-                    )
+                    if (quantity > 0) {
+                        ItemCounterPurple(count = quantity, onDecrease = onCountDecrease, onIncrease = onCountIncrease)
+                    } else {
+                        Text(
+                            text = "ADD",
+                            style =
+                                MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                        )
+                    }
                 }
             }
         }

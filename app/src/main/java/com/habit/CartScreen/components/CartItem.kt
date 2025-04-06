@@ -17,23 +17,27 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.data.local.model.Dish
+import com.domain.models.CartItem
 import com.habit.R
 
 @Composable
-fun CartItem(dish: Dish) {
+fun CartItem(
+    cartItem: CartItem,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
-            modifier = Modifier.size(12.dp),
-            imageVector = ImageVector.vectorResource(if (dish.isVeg) R.drawable.vegicon else R.drawable.nonvegicon),
-            contentDescription = if (dish.isVeg) "Veg" else "Non Veg",
+            modifier = Modifier.weight(1f).size(12.dp),
+            imageVector = ImageVector.vectorResource(if (cartItem.dish.isVeg) R.drawable.vegicon else R.drawable.nonvegicon),
+            contentDescription = if (cartItem.dish.isVeg) "Veg" else "Non Veg",
         )
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = dish.name, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
+        Column(modifier = Modifier.weight(4f).padding(8.dp)) {
+            Text(text = cartItem.dish.name, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
             Text(
                 text = "Customise selection",
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium, color = Color.LightGray),
@@ -41,11 +45,13 @@ fun CartItem(dish: Dish) {
         }
 
         ItemCounterGreen(
-            onIncrease = {},
-            onDecrease = {},
+            count = cartItem.quantity,
+            onIncrease = onIncrease,
+            onDecrease = onDecrease,
         )
         Text(
-            text = "\u20B9${dish.price}",
+            modifier = Modifier.weight(1f),
+            text = "\u20B9${cartItem.dish.price}",
         )
     }
 }

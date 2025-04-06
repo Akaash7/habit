@@ -16,19 +16,33 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.data.local.model.lookingForMore
-import com.data.local.model.triedTastedLoved
+import com.domain.models.lookingForMore
+import com.domain.models.triedTastedLoved
 import com.habit.MainScreen.components.DishCardLarge
 import com.habit.MainScreen.components.DishCardSmall
 import com.habit.MainScreen.components.HabitTitle
 import com.habit.ui.theme.HabitPurple
+import com.habit.viewmodel.MainViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(
+    navController: NavHostController,
+    viewmodel: MainViewmodel = hiltViewModel(),
+) {
+    val cartItems by viewmodel.cartItems.collectAsStateWithLifecycle()
+    val dishQuantityMap =
+        remember(cartItems) {
+            cartItems.associate { it.dish.dishId to it.quantity }
+        }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -52,9 +66,18 @@ fun MainScreen(navController: NavHostController) {
                     style = MaterialTheme.typography.titleMedium,
                     color = HabitPurple,
                 )
+
                 LazyRow(modifier = Modifier.fillMaxWidth()) {
-                    items(triedTastedLoved) { dish ->
-                        DishCardSmall(dish)
+                    items(triedTastedLoved, key = { dish -> dish.dishId }) { dish ->
+                        val quantity = dishQuantityMap[dish.dishId] ?: 0
+
+                        DishCardSmall(
+                            dish,
+                            addToCart = { viewmodel.addToCart(dish) },
+                            quantity = quantity,
+                            onCountIncrease = { viewmodel.addToCart(dish) },
+                            onCountDecrease = { viewmodel.removeFromCart(dish) },
+                        )
                     }
                 }
             }
@@ -66,8 +89,17 @@ fun MainScreen(navController: NavHostController) {
                     color = HabitPurple,
                 )
             }
+
             items(lookingForMore) { dish ->
-                DishCardLarge(dish)
+                val quantity = dishQuantityMap[dish.dishId] ?: 0
+
+                DishCardLarge(
+                    dish,
+                    addToCart = { viewmodel.addToCart(dish) },
+                    quantity = quantity,
+                    onCountIncrease = { viewmodel.addToCart(dish) },
+                    onCountDecrease = { viewmodel.removeFromCart(dish = dish) },
+                )
             }
         }
     }
