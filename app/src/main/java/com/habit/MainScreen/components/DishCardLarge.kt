@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.domain.models.Dish
 import com.habit.R
 import com.habit.ui.theme.HabitPurple
+import com.habit.ui.theme.HabitPurpleLight
 
 @Composable
 fun DishCardLarge(
@@ -56,12 +58,29 @@ fun DishCardLarge(
                         .weight(5.5f)
                         .padding(4.dp),
             ) {
-                Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Image(
                         modifier = Modifier.size(12.dp),
                         imageVector = ImageVector.vectorResource(if (dish.isVeg) R.drawable.vegicon else R.drawable.nonvegicon),
                         contentDescription = if (dish.isVeg) "Veg" else "Non Veg",
                     )
+                    if (dish.discount > 0) {
+                        Card(
+                            modifier = Modifier.wrapContentSize().padding(horizontal = 4.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = CardDefaults.cardColors(containerColor = HabitPurpleLight, contentColor = HabitPurple),
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(2.dp),
+                                text = "${dish.discount}% OFF",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    }
                 }
                 Text(
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
