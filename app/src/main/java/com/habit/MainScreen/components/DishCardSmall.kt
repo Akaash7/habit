@@ -45,6 +45,7 @@ fun DishCardSmall(
                 .size(width = 200.dp, height = 300.dp)
                 .padding(horizontal = 12.dp, vertical = 6.dp),
         shape = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
         colors = CardDefaults.cardColors().copy(containerColor = HabitPurpleLight),
     ) {
         Box(
