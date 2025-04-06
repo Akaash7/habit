@@ -24,9 +24,9 @@ A basic food ordering app UI for habit app
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/b048d753-ccdb-4c6e-b130-2c434573e0ed" alt="Habit App Screenshot 1" width="300"/>
+  <img src="https://github.com/user-attachments/assets/ae19bc9c-0001-44ff-ac1a-2ee144c919f1" alt="Habit App Screenshot 1" width="300"/>
   &nbsp;&nbsp;
-  <img src="https://github.com/user-attachments/assets/67a40b36-ec34-465e-8824-d9418e01d78b" alt="Habit App Screenshot 2" width="300"/>
+  <img src="https://github.com/user-attachments/assets/492db521-e732-4e8b-940b-75a79394b4d2" alt="Habit App Screenshot 2" width="300"/>
 </p>
 
 ## 📦 APK
